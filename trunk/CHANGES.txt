@@ -1,5 +1,5 @@
 Apache ManifoldCF Meridio Plugin change Log
-$Id: CHANGES.txt 1212300 2011-12-09 09:33:16Z kwright $
+$Id$
 
 ======================= 0.1-dev =====================
 
