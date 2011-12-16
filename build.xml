@@ -1,0 +1,107 @@
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+ contributor license agreements.  See the NOTICE file distributed with
+ this work for additional information regarding copyright ownership.
+ The ASF licenses this file to You under the Apache License, Version 2.0
+ (the "License"); you may not use this file except in compliance with
+ the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<project name="mcf-meridio-plugin" default="help">
+
+    <target name="clean">
+        <delete>
+	<fileset dir="." includes="apache-manifoldcf-meridio-plugin-*"/>
+        </delete>
+        <delete dir="dist"/>
+    </target>
+
+    <target name="deliver">
+        <mkdir dir="dist/WebService"/>
+        <copy todir="dist/WebService">
+            <fileset dir="webservice/Web Service/Installation Files">
+                <include name="*.Ini"/>
+                <include name="*.msi"/>
+            </fileset>
+            <fileset dir="dotnetsetup">
+                <include name="*.Exe"/>
+            </fileset>
+        </copy>
+        <mkdir dir="dist/TestHarness"/>
+        <copy todir="dist/TestHarness">
+            <fileset dir="webservice/Test Harness/Installation Files">
+                <include name="*.Ini"/>
+                <include name="*.msi"/>
+            </fileset>
+            <fileset dir="dotnetsetup">
+                <include name="*.Exe"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="build" depends="deliver"/>
+    
+    <target name="set-version">
+        <property name="release-version" value="0.1-incubating"/>
+    </target>
+      
+    <target name="create-source-zip" depends="set-version">
+      <zip destfile="apache-manifoldcf-meridio-plugin-${release-version}-src.zip" update="false">
+        <zipfileset dir="." prefix="apache-manifoldcf-meridio-plugin-${release-version}">
+          <exclude name="/dist/"/>
+          <exclude name="/apache-manifoldcf-meridio-plugin-*"/>
+        </zipfileset>
+      </zip>
+    </target>
+      
+    <target name="create-source-tar" depends="set-version">
+      <tar destfile="apache-manifoldcf-meridio-plugin-${release-version}-src.tar.gz" compression="gzip" longfile="gnu">
+        <tarfileset dir="." prefix="apache-manifoldcf-meridio-plugin-${release-version}">
+          <exclude name="/dist/"/>
+          <exclude name="/apache-manifoldcf-meridio-plugin-*"/>
+        </tarfileset>
+      </tar>
+    </target>
+
+    <target name="image" depends="create-source-zip,create-source-tar"/>
+
+    <target name="help">
+        <echo level="info">
+Apache ManifoldCF Meridio Plugin build file.  Use this
+file to build the plugin distributables.
+
+Useful targets are:
+
+clean   - Clean the build area
+build   - Build package under the 'dist' directory
+image   - Package the sources
+
+        </echo>
+    </target>
+  
+    <target name="-taskdef">
+      <typedef resource="org/apache/rat/anttasks/antlib.xml" uri="antlib:rat.anttasks">
+        <classpath>
+          <fileset dir="." includes="rat*.jar"/>
+        </classpath>
+      </typedef>
+    </target>
+    <target name="rat-sources" depends="-taskdef"
+      description="runs the tasks over src/java excluding the license directory">
+      <rat:report xmlns:rat="antlib:org.apache.rat.anttasks">
+        <fileset dir="webservice/">
+          <exclude name="Test Harness/Installation files/Setup.Ini"/>
+          <exclude name="Web Service/Installation files/Setup.Ini"/>
+        </fileset>
+      </rat:report>
+    </target>
+
+</project>

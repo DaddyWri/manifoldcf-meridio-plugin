@@ -1,0 +1,10 @@
+Apache ManifoldCF Meridio Plugin requires
+-----------------------------------------------
+* Nothing
+
+For building Apache ManifoldCF Meridio Plugin:
+--------------------------------------------------
+
+* Look at README.txt
+
+
